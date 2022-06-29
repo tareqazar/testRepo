@@ -8,7 +8,7 @@
         let inp = document.createElement('input');
         inp.setAttribute('id',taskName);
         inp.setAttribute('type',"checkbox");
-        inp.setAttribute('name','check');
+        inp.setAttribute('name','checkText');
         let lbl = document.createElement('label');
         lbl.setAttribute('for',taskName);
         lbl.innerHTML=taskName;
@@ -29,15 +29,24 @@
       };
 
       function removeOnClick(){
-
-        let removedTasks=document.getElementsByName('check');
+        let xhrDelete = new XMLHttpRequest();
+        xhrDelete.open("POST", "/remove_task");
+        //xhrDelete.setRequestHeader("Content-Type", "application/json");
+        let removedTasks=Array.from(document.getElementsByName('check'));
         let remTasks=[];
-        removedTasks.forEach(remTask =>
+        for(var i=0;i<removedTasks.length;i++){
+          if(removedTasks[i].checked) {remTasks.push(removedTasks[i].getAttribute('id'))};
+          console.log(removedTasks[i]);
+          }
+          console.log(remTasks);
+          xhrDelete.send(JSON.stringify(remTasks));
+
+       /* removedTasks.forEach(remTask =>
         {
           if(remTask.checked){remTasks.push(remTask)};
           console.log(remTask);
         }
-        );
+        );*/
       }
       
 
@@ -49,7 +58,6 @@
  //        };}
   
         
-      
     </script>
   </head>
 <body>
@@ -60,22 +68,21 @@
        <button onclick="addOnClick();" action = "/add_task"> Add Task </button>
        <h2> Added Task </h2>
        <ul id="task_list">
-            <% for (var i=0 ; i < task.length ; i++){ %>
+            <% for (let i=0 ; i < task.length ; i++){ %>
                 <li> 
-                  <input id="<% task[i] %>" type="checkbox" name="check" >
-                  <label for=" <% task[i] %> "> <%= task[i] %> </label>
+                  <input id= "<% task[i] %>" type="checkbox" name="check" > 
+                  <label for= "<% task[i] %>" name="checkText"> <%= task[i] %> </label>
                 </li>
-            <% } %> 
           </ul>
-        
-<button action="/removetask" type="submit"> Remove </button>
+<button onclick="removeOnClick()" type="submit"> Remove </button>
 
     <h2 id="fTasks"> Completed task </h2>
         <% for(var i=0;i < complete.length;i++){ %>
             <li>
-                <input type="checkbox" checked> <%= complete[i] %>
+                <input type="checkbox" checked> <%= complete[i] %> 
             </li>
         <% } %>
+<button type="file"  onclick>Choose File</button>
 </div>
 </body>
 </html>

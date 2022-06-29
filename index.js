@@ -45,4 +45,9 @@ if (typeof completeTask === "string") {
 }
 }
    res.redirect("/");
+});     
+
+app.post("/remove_task", function (req,res){
+    var removedTasks = req.body;
+    //console.log(removedTasks);
 });
