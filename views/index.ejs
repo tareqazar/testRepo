@@ -1,0 +1,81 @@
+<html>
+  <head>
+
+    <title> Todo app  </title>
+    <script>
+      function createLi(taskName) {
+        liElem=document.createElement('li');
+        let inp = document.createElement('input');
+        inp.setAttribute('id',taskName);
+        inp.setAttribute('type',"checkbox");
+        inp.setAttribute('name','check');
+        let lbl = document.createElement('label');
+        lbl.setAttribute('for',taskName);
+        lbl.innerHTML=taskName;
+        liElem.appendChild(inp);
+        liElem.appendChild(lbl);
+        document.getElementById('task_list').appendChild(liElem);
+      }
+      function addOnClick(){
+        let newTask = document.getElementById('newtask').value;
+        let xmlhttpreq = new XMLHttpRequest();
+        xmlhttpreq.open("POST", "/add_task");
+        xmlhttpreq.setRequestHeader("Content-Type", "application/json"); //modified
+        xmlhttpreq.send(JSON.stringify({newTask})); //new
+        alert(JSON.stringify({newTask}));
+        xmlhttpreq.onload = () => alert(xmlhttpreq.responseText);
+        createLi(newTask);
+        console.log(xmlhttpreq.getResponseHeader('version'));
+      };
+
+      function removeOnClick(){
+
+        let removedTasks=document.getElementsByName('check');
+        let remTasks=[];
+        removedTasks.forEach(remTask =>
+        {
+          if(remTask.checked){remTasks.push(remTask)};
+          console.log(remTask);
+        }
+        );
+      }
+      
+
+//      function removeOnClick(){
+//        let removedTasks = document.getElementsByName('check');
+//        remTasks=[];
+//      removedTasks.forEach(remTask => {
+//          if(remTask.getAttribute(checked)==true){remTasks.push(remTask);
+ //        };}
+  
+        
+      
+    </script>
+  </head>
+<body>
+  <div class="container">
+     <h2> Simple Todo app </h2>
+
+       <input type="text" id="newtask" value="MEME">        
+       <button onclick="addOnClick();" action = "/add_task"> Add Task </button>
+       <h2> Added Task </h2>
+       <ul id="task_list">
+            <% for (var i=0 ; i < task.length ; i++){ %>
+                <li> 
+                  <input id="<% task[i] %>" type="checkbox" name="check" >
+                  <label for=" <% task[i] %> "> <%= task[i] %> </label>
+                </li>
+            <% } %> 
+          </ul>
+        
+<button action="/removetask" type="submit"> Remove </button>
+
+    <h2 id="fTasks"> Completed task </h2>
+        <% for(var i=0;i < complete.length;i++){ %>
+            <li>
+                <input type="checkbox" checked> <%= complete[i] %>
+            </li>
+        <% } %>
+</div>
+</body>
+</html>
