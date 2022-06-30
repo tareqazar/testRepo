@@ -50,4 +50,18 @@ if (typeof completeTask === "string") {
 app.post("/remove_task", function (req,res){
     var removedTasks = req.body;
     //console.log(removedTasks);
+    removedTasks.forEach(function(remElem) {
+      complete.push(remElem);
+      task.forEach(function(delElem,index){
+        if(delElem == remElem) { task.splice(index,1)}
+      });
+    });
+    res.send("Congratulations!");
+    //complete.push(remElem);
+    //task.foreach(taskElem in task) {
+     // if(remElem == taskElem) {task.filter(remElem);}
+    //}
+
+    console.log(complete);
+    console.log(task);
 });
