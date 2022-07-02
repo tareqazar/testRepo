@@ -11,6 +11,7 @@ app.set('view engine','ejs');
 app.get('/', function (req, res) {
   res.render(`index`, { task: task, complete: complete});
 });
+
 app.listen(8080, function () {
   console.log('Running on port 8080!');
 });
@@ -64,4 +65,10 @@ app.post("/remove_task", function (req,res){
 
     console.log(complete);
     console.log(task);
+});
+
+app.post('/upload_file',function(req,res){
+  console.log(req.body);
+    const pic = req;
+    
 });

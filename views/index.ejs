@@ -3,7 +3,22 @@
 
     <title> Todo app  </title>
     <script>
-      //function submitFile();
+      function submitFile(){
+        var selectedFile = document.getElementById("uploaded");
+        const uploadButton=document.getElementById('uploadFile');
+        var formDataObj = new FormData();
+        //formDataObj.append()
+        formDataObj.append('img',selectedFile.value);
+        console.log(selectedFile.value);
+        xhrSendFile=new XMLHttpRequest();
+        xhrSendFile.open("POST", "/upload_file");
+        xhrSendFile.setRequestHeader('Content-Type','multipart/form-data');
+        xhrSendFile.send(formDataObj);
+        
+        console.log(formDataObj);
+        //console.log(formDataObj);
+        //document.getElementById('imgShown').setAttribute('src',selectedFile.value);
+      };
       function createLiOnTaskAdd(taskName) {
         liElem=document.createElement('li');
         let inp = document.createElement('input');
@@ -41,20 +56,24 @@
         }
          // console.log(remTasks);
          var tasks_ul=document.getElementById('task_list');
-        var comTaskLi=document.getElementById('fTasksli');
+        /*var comTaskLi=document.getElementById('fTasksli');*/
         var comTaskUl=document.getElementById('fTasksUl');
         //removing elements
         remTasks.forEach(function(remElem){
-         tasks_ul.removeChild(document.getElementById(remElem +'_li')); 
+        tasks_ul.removeChild(document.getElementById(remElem +'_li')); 
+        let fTasksli=document.createElement('li');
+        fTasksli.innerHTML="<input type='checkbox' checked> "+ remElem;
+        comTaskUl.append(fTasksli);
+        //  let liChildInput=document.createElement('input');
+        //  liChildInput.innerHTML=toString(remElem);
+        //  liChildInput.setAttribute('type','checkbox');
+
          //adding elements to complete tasks
-         //creating input
-         let liChildInput=document.createElement('input');
-         liChildInput.innerHTML=toString(remElem);
-         liChildInput.setAttribute('type','checkbox');
+        //  //creating input//
          //liChildInput.setAttribute('checked', true);
          //creating li
-         comTaskLi.appendChild(liChildInput); //add checkbox with taskname 
-         comTaskUl.appendChild(comTaskLi);
+         //comTaskLi.appendChild(liChildInput); //add checkbox with taskname 
+         
         });
         xhrDelete.send(JSON.stringify(remTasks));
         xhrDelete.onload = () => alert(xhrDelete.responseText);
@@ -66,16 +85,12 @@
         }
         );*/
       }
-      
-
 //      function removeOnClick(){
 //        let removedTasks = document.getElementsByName('check');
 //        remTasks=[];
 //      removedTasks.forEach(remTask => {
 //          if(remTask.getAttribute(checked)==true){remTasks.push(remTask);
  //        };}
-  
-        
     </script>
   </head>
 <body>
@@ -98,12 +113,16 @@
     <h2 id="fTasks"> Completed task </h2>
     <ul id="fTasksUl">
         <% for(var i=0;i < complete.length;i++){ %>
-            <li id="fTasksli">
+            <li>
                 <input type="checkbox" checked> <%= complete[i] %> 
             </li>
         <% } %>
     </ul>
-<!-- <input type="file" onclick="submitFile()"> -->
+  <input type="file" id="uploaded" name="uploaded">
+  <button id="uploadFile" onclick="submitFile()">Upload File</button>
+  <div>
+    <img id="imgShown" alt="uploaded picture">
+  </div>
 </div>
 </body>
 </html>
