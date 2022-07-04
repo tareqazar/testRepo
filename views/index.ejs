@@ -9,13 +9,12 @@
         var formDataObj = new FormData();
         //formDataObj.append()
         formDataObj.append('img',selectedFile.value);
-        console.log(selectedFile.value);
+//        console.log(selectedFile.value);
         xhrSendFile=new XMLHttpRequest();
         xhrSendFile.open("POST", "/upload_file");
         xhrSendFile.setRequestHeader('Content-Type','multipart/form-data');
         xhrSendFile.send(formDataObj);
-        
-        console.log(formDataObj);
+//        console.log(formDataObj);
         //console.log(formDataObj);
         //document.getElementById('imgShown').setAttribute('src',selectedFile.value);
       };
@@ -41,29 +40,29 @@
         alert(JSON.stringify({newTask}));
         xmlhttpreq.onload = () => alert(xmlhttpreq.responseText);
         createLiOnTaskAdd(newTask);
-        console.log(xmlhttpreq.getResponseHeader('version'));
       };
 
       function removeOnClick(){
         let xhrDelete = new XMLHttpRequest();
-        xhrDelete.open("POST", "/remove_task");
+        xhrDelete.open("DELETE", "/remove_task");
         xhrDelete.setRequestHeader("Content-Type", "application/json");
-        let removedTasks=Array.from(document.getElementsByName('check'));
+        let tasksToDo=Array.from(document.getElementsByName('check'));
         let remTasks=[];
-        for(var i=0;i<removedTasks.length;i++){
-          if(removedTasks[i].checked) {remTasks.push(removedTasks[i].getAttribute('id'))};
+        for(var i=0;i<tasksToDo.length;i++){
+          if(tasksToDo[i].checked) {
+            remTasks.push(tasksToDo[i].getAttribute('value'))};
+         //   console.log(tasksToDo[i].getAttribute('value'))
          // console.log(removedTasks[i]);
         }
          // console.log(remTasks);
-         var tasks_ul=document.getElementById('task_list');
-        /*var comTaskLi=document.getElementById('fTasksli');*/
-        var comTaskUl=document.getElementById('fTasksUl');
+        //var tasks_ul=document.getElementById('task_list');
+        //var comTaskUl=document.getElementById('fTasksUl');
         //removing elements
-        remTasks.forEach(function(remElem){
-        tasks_ul.removeChild(document.getElementById(remElem +'_li')); 
-        let fTasksli=document.createElement('li');
-        fTasksli.innerHTML="<input type='checkbox' checked> "+ remElem;
-        comTaskUl.append(fTasksli);
+        //remTasks.forEach(function(remElem){
+        //tasks_ul.removeChild(document.getElementById(remElem +'_li')); 
+        //let fTasksli=document.createElement('li');
+        //fTasksli.innerHTML="<input type='checkbox' checked> "+ remElem;
+        //comTaskUl.append(fTasksli);
         //  let liChildInput=document.createElement('input');
         //  liChildInput.innerHTML=toString(remElem);
         //  liChildInput.setAttribute('type','checkbox');
@@ -74,7 +73,7 @@
          //creating li
          //comTaskLi.appendChild(liChildInput); //add checkbox with taskname 
          
-        });
+        //});
         xhrDelete.send(JSON.stringify(remTasks));
         xhrDelete.onload = () => alert(xhrDelete.responseText);
         
@@ -101,23 +100,24 @@
        <button onclick="addOnClick();" action = "/add_task"> Add Task </button>
        <h2> Added Task </h2>
        <ul id="task_list">
-            <% for (let i=0 ; i < task.length ; i++){ %>
-                <li id="<%= task[i]+'_li' %>"> 
-                  <input id= "<%= task[i] %>" type="checkbox" name="check" > 
-                  <label for= "<%= task[i] %>" name="checkText"> <%= task[i] %> </label>
+             <% for (let i=0 ; i < task.length ; i++){ %>
+                <li id="<%= task[i]._id+'_li' %>"> 
+                  <input id= "<%= task[i]._id %>" value= "<%= task[i]._id %>" type="checkbox" name="check" > 
+                  <label for= "<%= task[i]._id  %>" name="checkText"> <%= task[i].task %> </label>
                 </li>
-            <% } %>
+             <% } %> 
           </ul>
 <button onclick="removeOnClick()" type="submit"> Remove </button>
 
-    <h2 id="fTasks"> Completed task </h2>
-    <ul id="fTasksUl">
-        <% for(var i=0;i < complete.length;i++){ %>
-            <li>
-                <input type="checkbox" checked> <%= complete[i] %> 
-            </li>
-        <% } %>
-    </ul>
+     <h2 id="fTasks"> Completed task </h2>
+          <ul id="comTasksUl">
+            <% for (let i=0 ; i < complete.length ; i++){ %>
+              <li id="<%= complete[i]._id+'_li' %>">
+                <input id="<%= complete[i]._id+'_li' %>" value="<% complete[i]._id %>" type="checkbox" checked>
+                <label for="<%= complete[i]._id %>"> <%= complete[i].task %></label> 
+              </li> 
+            <%}%>
+          </ul> 
   <input type="file" id="uploaded" name="uploaded">
   <button id="uploadFile" onclick="submitFile()">Upload File</button>
   <div>
